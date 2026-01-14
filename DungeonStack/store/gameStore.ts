@@ -6,7 +6,14 @@ import { create } from 'zustand';
 import { GameState, PlayerState, Block } from '../types';
 import { GameConfig } from '../constants/GameConfig';
 import { generateNewBlock, canMoveBlock, isBlockLanded } from '../utils/blockGenerator';
-import { findAllMatches, removeMatchedBlocks, applyGravity, countByType } from '../utils/blockMatcher';
+import { findAllMatches, removeMatchedBlocks, applyGravity, countByType, MatchGroup } from '../utils/blockMatcher';
+import {
+  processSwordAttack,
+  findEnemiesAtHeroLine,
+  removeEnemiesAtHeroLine,
+  countShields,
+  consumeShield,
+} from '../utils/combatHelper';
 
 interface GameStore extends GameState {
   // プレイヤーアクション
@@ -35,7 +42,10 @@ interface GameStore extends GameState {
 
   // マッチング & 消去アクション
   checkAndProcessMatches: () => void;
-  processMatchEffects: (matchCounts: Record<string, number>) => void;
+  processMatchEffects: (matchCounts: Record<string, number>, matchGroups: MatchGroup[]) => void;
+
+  // 戦闘アクション
+  checkEnemiesAtHeroLine: () => void;
 }
 
 const initialPlayerState: PlayerState = {
@@ -275,8 +285,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const matchGroups = findAllMatches(board);
 
     if (matchGroups.length === 0) {
-      return; // マッチなし
+      // マッチがない場合、Hero Lineをチェック
+      get().checkEnemiesAtHeroLine();
+      return;
     }
+
+    // マッチ効果を先に処理（剣攻撃など）
+    const matchCounts = countByType(matchGroups);
+    get().processMatchEffects(matchCounts, matchGroups);
 
     // マッチしたブロックを削除
     let newBoard = removeMatchedBlocks(board, matchGroups);
@@ -287,18 +303,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
     // ボード更新
     set({ board: newBoard });
 
-    // マッチ効果を処理
-    const matchCounts = countByType(matchGroups);
-    get().processMatchEffects(matchCounts);
-
     // 連鎖チェック
     setTimeout(() => {
       get().checkAndProcessMatches();
     }, GameConfig.blocks.afterMatchDelay);
   },
 
-  processMatchEffects: (matchCounts) => {
-    const { addCoins, addScore, healPlayer } = get();
+  processMatchEffects: (matchCounts, matchGroups) => {
+    const { addCoins, addScore, healPlayer, board } = get();
+    let newBoard = board;
 
     // 各アイテムタイプごとに処理
     Object.entries(matchCounts).forEach(([type, count]) => {
@@ -307,16 +320,35 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
       switch (type) {
         case 'sword':
-          // 剣は戦闘システムで処理（後で実装）
+          // 剣マッチ時の攻撃処理
+          const swordGroup = matchGroups.find(g => g.type === 'sword');
+          if (swordGroup) {
+            const swordPositions = swordGroup.blocks.map((b: Block) => ({ x: b.x, y: b.y }));
+            const { newBoard: boardAfterAttack, defeatedEnemies } = processSwordAttack(
+              newBoard,
+              swordPositions,
+              count
+            );
+            newBoard = boardAfterAttack;
+
+            // 撃破した敵のスコアと金貨
+            if (defeatedEnemies > 0) {
+              addScore(defeatedEnemies * GameConfig.scoring.perEnemyKill);
+              addCoins(defeatedEnemies * GameConfig.coinReward.perEnemy);
+            }
+          }
           break;
 
         case 'shield':
-          // 盾は戦闘システムで処理（後で実装）
+          // 盾は配置されるだけで効果（Hero Line到達時に使用）
           break;
 
         case 'potion':
-          // 回復処理
-          healPlayer(GameConfig.combat.potionHeal * Math.floor(count / 3));
+          // 回復処理（3つごとに20HP）
+          const healAmount = Math.floor(count / 3) * GameConfig.combat.potionHeal;
+          if (healAmount > 0) {
+            healPlayer(healAmount);
+          }
           break;
 
         case 'coin':
@@ -325,5 +357,44 @@ export const useGameStore = create<GameStore>((set, get) => ({
           break;
       }
     });
+
+    // ボード更新（剣攻撃で敵が撃破された場合）
+    if (newBoard !== board) {
+      set({ board: newBoard });
+    }
+  },
+
+  // Hero Line到達チェック
+  checkEnemiesAtHeroLine: () => {
+    const { board, damagePlayer } = get();
+
+    const enemiesAtHeroLine = findEnemiesAtHeroLine(board);
+
+    if (enemiesAtHeroLine.length === 0) {
+      return; // 敵なし
+    }
+
+    // 合計攻撃力を計算
+    const totalDamage = enemiesAtHeroLine.reduce((sum, enemy) => sum + (enemy.attack || 0), 0);
+
+    // 盾があれば1つ消費して1回分の攻撃を防ぐ
+    const shieldCount = countShields(board);
+    let newBoard = board;
+
+    if (shieldCount > 0) {
+      // 盾を消費
+      newBoard = consumeShield(newBoard);
+      // 重力を適用
+      newBoard = applyGravity(newBoard);
+    } else {
+      // プレイヤーにダメージ
+      damagePlayer(totalDamage);
+    }
+
+    // Hero Lineの敵を削除
+    newBoard = removeEnemiesAtHeroLine(newBoard);
+    newBoard = applyGravity(newBoard);
+
+    set({ board: newBoard });
   },
 }));
