@@ -11,11 +11,11 @@ export const GameConfig = {
     initialCoins: 0,
   },
 
-  // ブロック落下速度（ミリ秒/マス）
-  blockFall: {
-    normal: 500,         // 通常落下
-    fast: 50,            // 高速落下
-    afterMatch: 200,     // マッチ後の再配置
+  // ブロック設定
+  blocks: {
+    fallSpeed: 500,      // 通常落下速度（ミリ秒/マス）
+    fastFallSpeed: 50,   // 高速落下速度
+    afterMatchDelay: 200, // マッチ後の再配置待ち時間
   },
 
   // マッチング条件

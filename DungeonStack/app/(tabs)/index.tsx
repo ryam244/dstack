@@ -10,6 +10,7 @@ import { StatusBar } from '../../components/game/StatusBar';
 import { GameBoard } from '../../components/game/GameBoard';
 import { HeroLine } from '../../components/game/HeroLine';
 import { useGameStore } from '../../store/gameStore';
+import { useBlockFall } from '../../hooks/useBlockFall';
 import { Colors } from '../../constants/Colors';
 import { Layout } from '../../constants/Layout';
 
@@ -17,6 +18,9 @@ export default function GameScreen() {
   const { t } = useTranslation();
   const { isGameOver, isVictory, isPaused, startGame, pauseGame, resumeGame } = useGameStore();
   const player = useGameStore((state) => state.player);
+
+  // ブロック落下ロジックを有効化
+  useBlockFall();
 
   // ゲームが開始されていない場合の初期化
   useEffect(() => {

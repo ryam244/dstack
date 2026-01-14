@@ -3,8 +3,8 @@
  * 7x10グリッドのゲーム盤面を表示
  */
 
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useRef } from 'react';
+import { View, StyleSheet, GestureResponderEvent, PanResponder } from 'react-native';
 import { Block } from './Block';
 import { useGameStore } from '../../store/gameStore';
 import { Colors } from '../../constants/Colors';
@@ -12,12 +12,39 @@ import { Layout } from '../../constants/Layout';
 
 export const GameBoard: React.FC = () => {
   const board = useGameStore((state) => state.board);
+  const currentBlock = useGameStore((state) => state.currentBlock);
+  const { moveBlockLeft, moveBlockRight, dropBlock } = useGameStore();
   const blockSize = Layout.board.blockSize;
   const gap = Layout.board.gap;
+
+  // スワイプ検出用
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderRelease: (evt, gestureState) => {
+        const { dx, dy } = gestureState;
+
+        // 下方向のフリック（高速落下）
+        if (dy > 50 && Math.abs(dx) < 50) {
+          dropBlock();
+        }
+        // 左スワイプ
+        else if (dx < -30 && Math.abs(dy) < 50) {
+          moveBlockLeft();
+        }
+        // 右スワイプ
+        else if (dx > 30 && Math.abs(dy) < 50) {
+          moveBlockRight();
+        }
+      },
+    })
+  ).current;
 
   return (
     <View style={styles.container}>
       <View
+        {...panResponder.panHandlers}
         style={[
           styles.board,
           {
@@ -52,6 +79,13 @@ export const GameBoard: React.FC = () => {
               >
                 {/* ブロックが存在する場合のみ描画 */}
                 {cell && <Block block={cell} size={blockSize} />}
+
+                {/* 現在落下中のブロックを描画 */}
+                {currentBlock &&
+                  currentBlock.y === rowIndex &&
+                  currentBlock.x === colIndex && (
+                    <Block block={currentBlock} size={blockSize} />
+                  )}
               </View>
             ))}
           </View>

@@ -4,6 +4,9 @@
 
 import { ItemType, EnemyType } from '../constants/Items';
 
+// Re-export for convenience
+export type { ItemType, EnemyType };
+
 // ブロックの基本型
 export interface Block {
   id: string;
@@ -13,6 +16,8 @@ export interface Block {
   falling: boolean;
   matched: boolean;
   level?: number;  // 進化レベル（剣など）
+  hp?: number;  // 敵の場合のみ使用
+  attack?: number;  // 敵の場合のみ使用
 }
 
 // 敵ブロック

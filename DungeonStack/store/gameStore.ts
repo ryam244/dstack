@@ -3,11 +3,12 @@
  */
 
 import { create } from 'zustand';
-import { GameState, PlayerState } from '../types';
+import { GameState, PlayerState, Block } from '../types';
 import { GameConfig } from '../constants/GameConfig';
+import { generateNewBlock, canMoveBlock, isBlockLanded } from '../utils/blockGenerator';
 
 interface GameStore extends GameState {
-  // アクション
+  // プレイヤーアクション
   startGame: (difficulty: 'casual' | 'normal' | 'hardcore') => void;
   pauseGame: () => void;
   resumeGame: () => void;
@@ -20,6 +21,15 @@ interface GameStore extends GameState {
   nextWave: () => void;
   nextStage: () => void;
   resetGame: () => void;
+
+  // ブロック操作アクション
+  spawnNewBlock: () => void;
+  moveBlockLeft: () => void;
+  moveBlockRight: () => void;
+  moveBlockDown: () => boolean; // 着地したらtrue
+  dropBlock: () => void; // 一気に落とす
+  landBlock: () => void;
+  updateBoard: (board: (Block | null)[][]) => void;
 }
 
 const initialPlayerState: PlayerState = {
@@ -135,5 +145,105 @@ export const useGameStore = create<GameStore>((set, get) => ({
       isGameOver: false,
       isVictory: false,
     });
+  },
+
+  // ブロック操作アクション
+  spawnNewBlock: () => {
+    const { board, player } = get();
+    const startX = Math.floor(board[0].length / 2); // 中央から開始
+
+    // 敵の出現率（Waveが進むにつれて増加）
+    const baseEnemyRate = 0.3;
+    const enemySpawnRate = Math.min(0.6, baseEnemyRate + (player.wave * 0.05));
+
+    const newBlock = generateNewBlock(startX, player.stage, player.wave, enemySpawnRate);
+
+    // スポーン位置にすでにブロックがある場合はゲームオーバー
+    if (board[0][startX] !== null) {
+      get().gameOver();
+      return;
+    }
+
+    set({ currentBlock: newBlock });
+  },
+
+  moveBlockLeft: () => {
+    const { currentBlock, board } = get();
+    if (!currentBlock || !currentBlock.falling) return;
+
+    const newX = currentBlock.x - 1;
+    if (canMoveBlock(board, currentBlock, newX, currentBlock.y)) {
+      set({
+        currentBlock: { ...currentBlock, x: newX },
+      });
+    }
+  },
+
+  moveBlockRight: () => {
+    const { currentBlock, board } = get();
+    if (!currentBlock || !currentBlock.falling) return;
+
+    const newX = currentBlock.x + 1;
+    if (canMoveBlock(board, currentBlock, newX, currentBlock.y)) {
+      set({
+        currentBlock: { ...currentBlock, x: newX },
+      });
+    }
+  },
+
+  moveBlockDown: () => {
+    const { currentBlock, board } = get();
+    if (!currentBlock || !currentBlock.falling) return false;
+
+    // 着地判定
+    if (isBlockLanded(board, currentBlock)) {
+      get().landBlock();
+      return true;
+    }
+
+    // 下に移動
+    const newY = currentBlock.y + 1;
+    set({
+      currentBlock: { ...currentBlock, y: newY },
+    });
+
+    return false;
+  },
+
+  dropBlock: () => {
+    const { currentBlock, board } = get();
+    if (!currentBlock || !currentBlock.falling) return;
+
+    let newY = currentBlock.y;
+    while (!isBlockLanded(board, { ...currentBlock, y: newY })) {
+      newY += 1;
+    }
+
+    set({
+      currentBlock: { ...currentBlock, y: newY },
+    });
+
+    get().landBlock();
+  },
+
+  landBlock: () => {
+    const { currentBlock, board } = get();
+    if (!currentBlock) return;
+
+    // ブロックを固定
+    const newBoard = board.map(row => [...row]);
+    newBoard[currentBlock.y][currentBlock.x] = {
+      ...currentBlock,
+      falling: false,
+    };
+
+    set({
+      board: newBoard,
+      currentBlock: null,
+    });
+  },
+
+  updateBoard: (board) => {
+    set({ board });
   },
 }));
