@@ -17,7 +17,7 @@ export interface ItemMeta {
     en: string;
     ja: string;
   };
-  icon: string;
+  icon: any; // require() で読み込んだ画像リソース
   rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
   stackable: boolean;
   evolvable: boolean;
@@ -35,7 +35,7 @@ export const ItemDefinitions: Record<ItemType, ItemMeta> = {
       en: 'Match 3 to evolve into Big Sword. Attack adjacent enemies.',
       ja: '3つ揃えると大剣に進化。隣接する敵を攻撃します。',
     },
-    icon: 'assets/items/sword.png',
+    icon: require('../assets/items/sword.png'),
     rarity: 'common',
     stackable: true,
     evolvable: true,
@@ -51,7 +51,7 @@ export const ItemDefinitions: Record<ItemType, ItemMeta> = {
       en: 'Blocks 1 damage when enemy reaches Hero Line.',
       ja: '敵がHero Lineに到達した時、1ダメージを防ぎます。',
     },
-    icon: 'assets/items/shield.png',
+    icon: require('../assets/items/shield.png'),
     rarity: 'common',
     stackable: false,
     evolvable: false,
@@ -66,7 +66,7 @@ export const ItemDefinitions: Record<ItemType, ItemMeta> = {
       en: 'Match 3 to restore 20 HP.',
       ja: '3つ揃えるとHP20回復します。',
     },
-    icon: 'assets/items/potion.png',
+    icon: require('../assets/items/potion.png'),
     rarity: 'common',
     stackable: true,
     evolvable: false,
@@ -81,7 +81,7 @@ export const ItemDefinitions: Record<ItemType, ItemMeta> = {
       en: 'Match to earn coins. Used for permanent upgrades.',
       ja: 'マッチすると金貨を獲得。永続強化に使用できます。',
     },
-    icon: 'assets/items/coin.png',
+    icon: require('../assets/items/coin.png'),
     rarity: 'common',
     stackable: true,
     evolvable: false,
@@ -96,7 +96,7 @@ export interface EnemyMeta {
   };
   hp: number;
   attack: number;
-  sprite: string;
+  sprite: any; // require() で読み込んだ画像リソース
   description: {
     en: string;
     ja: string;
@@ -109,7 +109,7 @@ export const EnemyDefinitions: Record<EnemyType, EnemyMeta> = {
     name: { en: 'Slime', ja: 'スライム' },
     hp: 1,
     attack: 5,
-    sprite: 'assets/enemies/slime.png',
+    sprite: require('../assets/enemies/slime.png'),
     description: {
       en: 'The weakest enemy. Easy to defeat.',
       ja: '最弱の敵。簡単に倒せます。',
@@ -120,7 +120,7 @@ export const EnemyDefinitions: Record<EnemyType, EnemyMeta> = {
     name: { en: 'Goblin', ja: 'ゴブリン' },
     hp: 2,
     attack: 10,
-    sprite: 'assets/enemies/goblin.png',
+    sprite: require('../assets/enemies/goblin.png'),
     description: {
       en: 'A common foe with moderate strength.',
       ja: 'よくいる敵。そこそこ強い。',
@@ -131,7 +131,7 @@ export const EnemyDefinitions: Record<EnemyType, EnemyMeta> = {
     name: { en: 'Bat', ja: 'コウモリ' },
     hp: 1,
     attack: 3,
-    sprite: 'assets/enemies/bat.png',
+    sprite: require('../assets/enemies/slime.png'), // TODO: bat.pngを作成
     description: {
       en: 'Fast falling enemy with low attack.',
       ja: '素早く落ちてくる敵。攻撃力は低い。',
@@ -142,7 +142,7 @@ export const EnemyDefinitions: Record<EnemyType, EnemyMeta> = {
     name: { en: 'Orc', ja: 'オーク' },
     hp: 3,
     attack: 15,
-    sprite: 'assets/enemies/orc.png',
+    sprite: require('../assets/enemies/goblin.png'), // TODO: orc.pngを作成
     description: {
       en: 'A strong enemy with high HP.',
       ja: '強敵。HPが高い。',
@@ -153,7 +153,7 @@ export const EnemyDefinitions: Record<EnemyType, EnemyMeta> = {
     name: { en: 'Dragon', ja: 'ドラゴン' },
     hp: 10,
     attack: 25,
-    sprite: 'assets/enemies/dragon.png',
+    sprite: require('../assets/enemies/goblin.png'), // TODO: dragon.pngを作成
     description: {
       en: 'Boss monster. Extremely dangerous.',
       ja: 'ボス級モンスター。非常に危険。',
