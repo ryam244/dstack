@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, SafeAreaView, TouchableOpacity, Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { StatusBar } from '../../components/game/StatusBar';
 import { GameBoard } from '../../components/game/GameBoard';
@@ -17,21 +17,13 @@ import { Layout } from '../../constants/Layout';
 
 export default function GameScreen() {
   const { t } = useTranslation();
-  const { isGameOver, isVictory, isPaused, startGame, pauseGame, resumeGame } = useGameStore();
-  const player = useGameStore((state) => state.player);
+  const { isGameStarted, isGameOver, isVictory, isPaused, startGame, pauseGame, resumeGame } = useGameStore();
 
   // ブロック落下ロジックを有効化
   useBlockFall();
 
-  // ゲームが開始されていない場合の初期化
-  useEffect(() => {
-    if (player.stage === 1 && player.wave === 1 && player.hp === 0) {
-      // まだゲームが開始されていない
-    }
-  }, [player]);
-
-  const handleStartGame = () => {
-    startGame('normal');
+  const handleStartGame = (difficulty: 'casual' | 'normal' | 'hardcore') => {
+    startGame(difficulty);
   };
 
   const handlePause = () => {
@@ -42,16 +34,40 @@ export default function GameScreen() {
     }
   };
 
-  // ゲームが開始されていない場合
-  if (player.hp === 0 && !isGameOver) {
+  // ゲームが開始されていない場合（タイトル画面）
+  if (!isGameStarted) {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.menuContainer}>
           <Text style={styles.title}>{t('game.title')}</Text>
 
-          <TouchableOpacity style={styles.startButton} onPress={handleStartGame}>
-            <Text style={styles.startButtonText}>{t('common.start')}</Text>
-          </TouchableOpacity>
+          <Text style={styles.subtitle}>{t('game.selectDifficulty')}</Text>
+
+          <View style={styles.difficultyButtons}>
+            <TouchableOpacity
+              style={[styles.difficultyButton, styles.casualButton]}
+              onPress={() => handleStartGame('casual')}
+            >
+              <Text style={styles.difficultyButtonText}>{t('game.casual')}</Text>
+              <Text style={styles.difficultyDescription}>{t('game.casualDesc')}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.difficultyButton, styles.normalButton]}
+              onPress={() => handleStartGame('normal')}
+            >
+              <Text style={styles.difficultyButtonText}>{t('game.normal')}</Text>
+              <Text style={styles.difficultyDescription}>{t('game.normalDesc')}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.difficultyButton, styles.hardcoreButton]}
+              onPress={() => handleStartGame('hardcore')}
+            >
+              <Text style={styles.difficultyButtonText}>{t('game.hardcore')}</Text>
+              <Text style={styles.difficultyDescription}>{t('game.hardcoreDesc')}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </SafeAreaView>
     );
@@ -59,7 +75,7 @@ export default function GameScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <View style={styles.gameContent}>
         {/* ステータスバー */}
         <StatusBar />
 
@@ -75,7 +91,7 @@ export default function GameScreen() {
             {isPaused ? t('common.resume') : t('common.pause')}
           </Text>
         </TouchableOpacity>
-      </ScrollView>
+      </View>
 
       {/* ゲームオーバー/勝利モーダル */}
       <GameOverModal />
@@ -88,8 +104,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.background.primary,
   },
-  scrollContent: {
-    flexGrow: 1,
+  gameContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   menuContainer: {
     flex: 1,
@@ -138,5 +156,50 @@ const styles = StyleSheet.create({
     color: Colors.text.primary,
     fontSize: Layout.fontSize.medium,
     fontWeight: 'bold',
+  },
+  subtitle: {
+    fontSize: Layout.fontSize.large,
+    color: Colors.text.secondary,
+    marginBottom: Layout.spacing.lg,
+    textAlign: 'center',
+  },
+  difficultyButtons: {
+    width: '100%',
+    gap: Layout.spacing.md,
+  },
+  difficultyButton: {
+    paddingVertical: Layout.spacing.md,
+    paddingHorizontal: Layout.spacing.lg,
+    borderRadius: 12,
+    borderWidth: 3,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  casualButton: {
+    backgroundColor: Colors.accent.success,
+    borderColor: Colors.ui.cardBorder,
+  },
+  normalButton: {
+    backgroundColor: Colors.accent.primary,
+    borderColor: Colors.ui.cardBorder,
+  },
+  hardcoreButton: {
+    backgroundColor: Colors.accent.danger,
+    borderColor: Colors.ui.cardBorder,
+  },
+  difficultyButtonText: {
+    color: Colors.text.dark,
+    fontSize: Layout.fontSize.xlarge,
+    fontWeight: 'bold',
+    marginBottom: Layout.spacing.xs,
+  },
+  difficultyDescription: {
+    color: Colors.text.dark,
+    fontSize: Layout.fontSize.small,
+    opacity: 0.8,
   },
 });

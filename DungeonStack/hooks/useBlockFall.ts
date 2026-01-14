@@ -10,6 +10,7 @@ import { GameConfig } from '../constants/GameConfig';
 export const useBlockFall = () => {
   const {
     currentBlock,
+    isGameStarted,
     isPaused,
     isGameOver,
     isVictory,
@@ -17,11 +18,11 @@ export const useBlockFall = () => {
     moveBlockDown,
   } = useGameStore();
 
-  const fallIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const fallIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    // ゲームが停止中またはクリア済みの場合は何もしない
-    if (isPaused || isGameOver || isVictory) {
+    // ゲームが開始されていない、または停止中・クリア済みの場合は何もしない
+    if (!isGameStarted || isPaused || isGameOver || isVictory) {
       if (fallIntervalRef.current) {
         clearInterval(fallIntervalRef.current);
         fallIntervalRef.current = null;
@@ -59,9 +60,9 @@ export const useBlockFall = () => {
         fallIntervalRef.current = null;
       }
     };
-  }, [currentBlock, isPaused, isGameOver, isVictory, spawnNewBlock, moveBlockDown]);
+  }, [currentBlock, isGameStarted, isPaused, isGameOver, isVictory, spawnNewBlock, moveBlockDown]);
 
   return {
-    isActive: !!currentBlock && !isPaused && !isGameOver && !isVictory,
+    isActive: !!currentBlock && isGameStarted && !isPaused && !isGameOver && !isVictory,
   };
 };

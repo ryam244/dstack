@@ -15,6 +15,13 @@
   },
   "game": {
     "title": "Dungeon Stack",
+    "selectDifficulty": "難易度を選択",
+    "casual": "カジュアル",
+    "normal": "ノーマル",
+    "hardcore": "ハードコア",
+    "casualDesc": "簡単モード • HP150% • ダメージ70%",
+    "normalDesc": "標準的な難易度",
+    "hardcoreDesc": "難しいモード • HP70% • ダメージ150%",
     "stage": "ステージ {{number}}",
     "wave": "ウェーブ {{number}}",
     "hp": "HP",

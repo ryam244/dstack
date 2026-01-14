@@ -4,7 +4,7 @@
  */
 
 import React, { useRef } from 'react';
-import { View, StyleSheet, GestureResponderEvent, PanResponder } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, PanResponder } from 'react-native';
 import { Block } from './Block';
 import { useGameStore } from '../../store/gameStore';
 import { Colors } from '../../constants/Colors';
@@ -17,25 +17,32 @@ export const GameBoard: React.FC = () => {
   const blockSize = Layout.board.blockSize;
   const gap = Layout.board.gap;
 
-  // スワイプ検出用
+  // スワイプ検出用（改善版）
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: () => true,
       onPanResponderRelease: (evt, gestureState) => {
         const { dx, dy } = gestureState;
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
 
-        // 下方向のフリック（高速落下）
-        if (dy > 50 && Math.abs(dx) < 50) {
-          dropBlock();
+        // スワイプの最小距離
+        const MIN_SWIPE_DISTANCE = 50;
+
+        // 水平スワイプ（横方向の移動が縦方向の1.5倍以上）
+        if (absDx > MIN_SWIPE_DISTANCE && absDx > absDy * 1.5) {
+          if (dx < 0) {
+            moveBlockLeft();
+          } else {
+            moveBlockRight();
+          }
         }
-        // 左スワイプ
-        else if (dx < -30 && Math.abs(dy) < 50) {
-          moveBlockLeft();
-        }
-        // 右スワイプ
-        else if (dx > 30 && Math.abs(dy) < 50) {
-          moveBlockRight();
+        // 垂直スワイプ（縦方向の移動が横方向の1.5倍以上）
+        else if (absDy > MIN_SWIPE_DISTANCE && absDy > absDx * 1.5) {
+          if (dy > 0) {
+            dropBlock();
+          }
         }
       },
     })
@@ -94,6 +101,33 @@ export const GameBoard: React.FC = () => {
 
       {/* Hero Line (最下部の境界線) */}
       <View style={styles.heroLine} />
+
+      {/* コントロールボタン */}
+      <View style={styles.controlButtons}>
+        <TouchableOpacity
+          style={styles.controlButton}
+          onPress={moveBlockLeft}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.controlButtonText}>←</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.controlButton, styles.dropButton]}
+          onPress={dropBlock}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.controlButtonText}>↓</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.controlButton}
+          onPress={moveBlockRight}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.controlButtonText}>→</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -136,5 +170,39 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 6,
     elevation: 5,
+  },
+  controlButtons: {
+    flexDirection: 'row',
+    marginTop: Layout.spacing.md,
+    gap: Layout.spacing.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  controlButton: {
+    backgroundColor: Colors.accent.primary,
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 3,
+    borderColor: Colors.ui.cardBorder,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+  },
+  dropButton: {
+    backgroundColor: Colors.accent.danger,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+  controlButtonText: {
+    color: Colors.text.dark,
+    fontSize: 36,
+    fontWeight: 'bold',
+    lineHeight: 36,
   },
 });

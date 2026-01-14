@@ -15,6 +15,13 @@
   },
   "game": {
     "title": "Dungeon Stack",
+    "selectDifficulty": "Select Difficulty",
+    "casual": "Casual",
+    "normal": "Normal",
+    "hardcore": "Hardcore",
+    "casualDesc": "Easy mode • 150% HP • 70% damage",
+    "normalDesc": "Standard difficulty",
+    "hardcoreDesc": "Hard mode • 70% HP • 150% damage",
     "stage": "Stage {{number}}",
     "wave": "Wave {{number}}",
     "hp": "HP",

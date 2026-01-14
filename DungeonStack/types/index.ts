@@ -45,6 +45,7 @@ export interface GameState {
   board: (Block | null)[][];  // 7x10 のグリッド
   player: PlayerState;
   currentBlock: Block | null;
+  isGameStarted: boolean;  // ゲームが開始されているか
   isPaused: boolean;
   isGameOver: boolean;
   isVictory: boolean;
