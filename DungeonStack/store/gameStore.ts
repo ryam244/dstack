@@ -6,6 +6,7 @@ import { create } from 'zustand';
 import { GameState, PlayerState, Block } from '../types';
 import { GameConfig } from '../constants/GameConfig';
 import { generateNewBlock, canMoveBlock, isBlockLanded } from '../utils/blockGenerator';
+import { findAllMatches, removeMatchedBlocks, applyGravity, countByType } from '../utils/blockMatcher';
 
 interface GameStore extends GameState {
   // プレイヤーアクション
@@ -18,6 +19,7 @@ interface GameStore extends GameState {
   damagePlayer: (amount: number) => void;
   healPlayer: (amount: number) => void;
   addCoins: (amount: number) => void;
+  addScore: (amount: number) => void;
   nextWave: () => void;
   nextStage: () => void;
   resetGame: () => void;
@@ -30,6 +32,10 @@ interface GameStore extends GameState {
   dropBlock: () => void; // 一気に落とす
   landBlock: () => void;
   updateBoard: (board: (Block | null)[][]) => void;
+
+  // マッチング & 消去アクション
+  checkAndProcessMatches: () => void;
+  processMatchEffects: (matchCounts: Record<string, number>) => void;
 }
 
 const initialPlayerState: PlayerState = {
@@ -108,6 +114,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
         ...state.player,
         coins: state.player.coins + amount,
         totalCoinsEarned: state.player.totalCoinsEarned + amount,
+      },
+    }));
+  },
+
+  addScore: (amount) => {
+    set((state) => ({
+      player: {
+        ...state.player,
+        score: state.player.score + amount,
       },
     }));
   },
@@ -241,9 +256,74 @@ export const useGameStore = create<GameStore>((set, get) => ({
       board: newBoard,
       currentBlock: null,
     });
+
+    // マッチング判定を実行
+    setTimeout(() => {
+      get().checkAndProcessMatches();
+    }, 100);
   },
 
   updateBoard: (board) => {
     set({ board });
+  },
+
+  // マッチング & 消去処理
+  checkAndProcessMatches: () => {
+    const { board } = get();
+
+    // マッチングを検出
+    const matchGroups = findAllMatches(board);
+
+    if (matchGroups.length === 0) {
+      return; // マッチなし
+    }
+
+    // マッチしたブロックを削除
+    let newBoard = removeMatchedBlocks(board, matchGroups);
+
+    // 重力を適用
+    newBoard = applyGravity(newBoard);
+
+    // ボード更新
+    set({ board: newBoard });
+
+    // マッチ効果を処理
+    const matchCounts = countByType(matchGroups);
+    get().processMatchEffects(matchCounts);
+
+    // 連鎖チェック
+    setTimeout(() => {
+      get().checkAndProcessMatches();
+    }, GameConfig.blocks.afterMatchDelay);
+  },
+
+  processMatchEffects: (matchCounts) => {
+    const { addCoins, addScore, healPlayer } = get();
+
+    // 各アイテムタイプごとに処理
+    Object.entries(matchCounts).forEach(([type, count]) => {
+      // スコア加算
+      addScore(count * GameConfig.scoring.perBlockMatch);
+
+      switch (type) {
+        case 'sword':
+          // 剣は戦闘システムで処理（後で実装）
+          break;
+
+        case 'shield':
+          // 盾は戦闘システムで処理（後で実装）
+          break;
+
+        case 'potion':
+          // 回復処理
+          healPlayer(GameConfig.combat.potionHeal * Math.floor(count / 3));
+          break;
+
+        case 'coin':
+          // 金貨獲得
+          addCoins(GameConfig.coinReward.perCoinBlock * count);
+          break;
+      }
+    });
   },
 }));
