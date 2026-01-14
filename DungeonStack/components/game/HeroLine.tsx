@@ -79,10 +79,10 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: Layout.spacing.small,
+    paddingVertical: Layout.spacing.sm,
     backgroundColor: Colors.background.secondary,
     borderTopWidth: 3,
-    borderTopColor: Colors.ui.danger,
+    borderTopColor: Colors.accent.danger,
     position: 'relative',
   },
   heroContainer: {
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: Colors.ui.danger,
+    backgroundColor: Colors.accent.danger,
     opacity: 0.2,
   },
 });

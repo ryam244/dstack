@@ -55,13 +55,16 @@ export const GameConfig = {
       attack: 15,
       spawnWeight: 10,
     },
+    dragon: {
+      hp: 10,
+      attack: 25,
+      spawnWeight: 5,
+    },
   },
 
   // ボス（MVP版は1体のみ）
   boss: {
     dragon: {
-      hp: 10,
-      attack: 25,
       appearStages: [5],  // MVPはステージ5のみ
       coinReward: 500,
     },

@@ -87,27 +87,27 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background.primary,
   },
   scrollContent: {
-    padding: Layout.spacing.medium,
+    padding: Layout.spacing.md,
   },
   header: {
-    marginBottom: Layout.spacing.large,
+    marginBottom: Layout.spacing.lg,
   },
   title: {
-    fontSize: Layout.fontSize.xxxlarge,
+    fontSize: Layout.fontSize.title,
     fontWeight: 'bold',
     color: Colors.text.primary,
-    marginBottom: Layout.spacing.medium,
+    marginBottom: Layout.spacing.md,
     textAlign: 'center',
   },
   coinsContainer: {
     backgroundColor: Colors.background.secondary,
     borderRadius: 12,
-    padding: Layout.spacing.medium,
+    padding: Layout.spacing.md,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: Colors.border.emphasis,
+    borderColor: Colors.ui.cardBorder,
   },
   coinsLabel: {
     color: Colors.text.secondary,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   coinsValue: {
-    color: Colors.text.accent,
+    color: Colors.text.gold,
     fontSize: Layout.fontSize.xxlarge,
     fontWeight: 'bold',
   },

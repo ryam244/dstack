@@ -29,8 +29,8 @@ export const Block: React.FC<BlockProps> = ({ block, size }) => {
     : (definition as any).icon;
 
   const backgroundColor = isEnemy
-    ? Colors.enemies[block.type as keyof typeof Colors.enemies]?.base || Colors.background.secondary
-    : Colors.items[block.type as keyof typeof Colors.items]?.base || Colors.background.secondary;
+    ? Colors.enemies[block.type as keyof typeof Colors.enemies] || Colors.background.secondary
+    : (Colors.items[block.type as keyof typeof Colors.items] as any)?.base || Colors.background.secondary;
 
   return (
     <View
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     borderWidth: 2,
-    borderColor: Colors.border.default,
+    borderColor: Colors.ui.cardBorder,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 2,
     right: 2,
-    backgroundColor: Colors.ui.healthBar,
+    backgroundColor: Colors.accent.danger,
     borderRadius: 8,
     paddingHorizontal: 4,
     paddingVertical: 2,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   hpText: {
-    color: Colors.text.light,
+    color: Colors.text.white,
     fontSize: Layout.fontSize.tiny,
     fontWeight: 'bold',
   },
@@ -104,13 +104,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 2,
     left: 2,
-    backgroundColor: Colors.ui.primary,
+    backgroundColor: Colors.accent.primary,
     borderRadius: 6,
     paddingHorizontal: 4,
     paddingVertical: 1,
   },
   levelText: {
-    color: Colors.text.light,
+    color: Colors.text.dark,
     fontSize: Layout.fontSize.tiny,
     fontWeight: 'bold',
   },

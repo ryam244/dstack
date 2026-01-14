@@ -70,11 +70,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.background.secondary,
     borderRadius: 12,
-    padding: Layout.spacing.medium,
-    marginHorizontal: Layout.spacing.medium,
-    marginVertical: Layout.spacing.small,
+    padding: Layout.spacing.md,
+    marginHorizontal: Layout.spacing.md,
+    marginVertical: Layout.spacing.sm,
     borderWidth: 2,
-    borderColor: Colors.border.default,
+    borderColor: Colors.ui.cardBorder,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: Layout.spacing.small,
+    marginBottom: Layout.spacing.sm,
   },
   stageText: {
     color: Colors.text.primary,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   hpContainer: {
-    marginBottom: Layout.spacing.small,
+    marginBottom: Layout.spacing.sm,
   },
   hpLabel: {
     color: Colors.text.primary,
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background.primary,
     borderRadius: 16,
     borderWidth: 2,
-    borderColor: Colors.border.emphasis,
+    borderColor: Colors.ui.cardBorder,
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
   },
   hpText: {
-    color: Colors.text.light,
+    color: Colors.text.white,
     fontSize: Layout.fontSize.medium,
     fontWeight: 'bold',
     textShadowColor: '#000',
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   statValue: {
-    color: Colors.text.accent,
+    color: Colors.text.gold,
     fontSize: Layout.fontSize.large,
     fontWeight: 'bold',
   },
