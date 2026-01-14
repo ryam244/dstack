@@ -1,0 +1,47 @@
+{
+  "common": {
+    "start": "スタート",
+    "continue": "続ける",
+    "pause": "一時停止",
+    "resume": "再開",
+    "quit": "終了",
+    "retry": "リトライ",
+    "confirm": "確認",
+    "cancel": "キャンセル",
+    "buy": "購入",
+    "upgrade": "強化",
+    "back": "戻る"
+  },
+  "game": {
+    "title": "Dungeon Stack",
+    "stage": "ステージ {{number}}",
+    "wave": "ウェーブ {{number}}",
+    "hp": "HP",
+    "score": "スコア",
+    "coins": "金貨",
+    "gameOver": "ゲームオーバー",
+    "victory": "勝利！",
+    "finalScore": "最終スコア: {{score}}",
+    "coinsEarned": "獲得金貨: {{coins}}"
+  },
+  "difficulty": {
+    "casual": "カジュアル",
+    "normal": "ノーマル",
+    "hardcore": "ハードコア",
+    "casualDesc": "敵ダメージ70%、HP150%",
+    "normalDesc": "標準的な難易度",
+    "hardcoreDesc": "敵ダメージ150%、HP70%、金貨150%"
+  },
+  "upgrades": {
+    "title": "永続強化",
+    "maxHP": "最大HP強化",
+    "maxHPDesc": "最大HPを10増やす",
+    "boardExpansion": "盤面拡張",
+    "boardExpansionDesc": "盤面に1列追加する",
+    "startingCoins": "初期金貨",
+    "startingCoinsDesc": "金貨50枚でスタート",
+    "level": "レベル {{level}}/{{max}}",
+    "cost": "コスト: {{amount}}金貨",
+    "maxLevel": "最大レベル"
+  }
+}

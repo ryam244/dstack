@@ -1,0 +1,47 @@
+{
+  "common": {
+    "start": "Start",
+    "continue": "Continue",
+    "pause": "Pause",
+    "resume": "Resume",
+    "quit": "Quit",
+    "retry": "Retry",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "buy": "Buy",
+    "upgrade": "Upgrade",
+    "back": "Back"
+  },
+  "game": {
+    "title": "Dungeon Stack",
+    "stage": "Stage {{number}}",
+    "wave": "Wave {{number}}",
+    "hp": "HP",
+    "score": "Score",
+    "coins": "Coins",
+    "gameOver": "Game Over",
+    "victory": "Victory!",
+    "finalScore": "Final Score: {{score}}",
+    "coinsEarned": "Coins Earned: {{coins}}"
+  },
+  "difficulty": {
+    "casual": "Casual",
+    "normal": "Normal",
+    "hardcore": "Hardcore",
+    "casualDesc": "70% enemy damage, 150% HP",
+    "normalDesc": "Standard difficulty",
+    "hardcoreDesc": "150% enemy damage, 70% HP, 150% coins"
+  },
+  "upgrades": {
+    "title": "Upgrades",
+    "maxHP": "Max HP Boost",
+    "maxHPDesc": "Increase maximum HP by 10",
+    "boardExpansion": "Board Expansion",
+    "boardExpansionDesc": "Add 1 column to the board",
+    "startingCoins": "Starting Coins",
+    "startingCoinsDesc": "Start with +50 coins",
+    "level": "Level {{level}}/{{max}}",
+    "cost": "Cost: {{amount}} coins",
+    "maxLevel": "Max Level"
+  }
+}
