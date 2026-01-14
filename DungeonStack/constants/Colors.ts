@@ -80,12 +80,12 @@ export const Colors = {
 
   // グラデーション（LinearGradient用）
   gradients: {
-    button: ['#ffb84d', '#ff9f1c'],
-    buttonSecondary: ['#4da6ff', '#1976d2'],
-    card: ['#2d3142', '#242838'],
-    health: ['#ff4d6d', '#ff1744'],
-    energy: ['#4da6ff', '#1976d2'],
-    gold: ['#ffd700', '#ffb84d'],
+    button: ['#ffb84d', '#ff9f1c'] as const,
+    buttonSecondary: ['#4da6ff', '#1976d2'] as const,
+    card: ['#2d3142', '#242838'] as const,
+    health: ['#ff4d6d', '#ff1744'] as const,
+    energy: ['#4da6ff', '#1976d2'] as const,
+    gold: ['#ffd700', '#ffb84d'] as const,
   },
 };
 

@@ -13,6 +13,7 @@ interface PlayerStore extends PlayerData {
   addCoins: (amount: number) => void;
   spendCoins: (amount: number) => boolean;
   upgradeLevel: (upgradeId: string) => boolean;
+  purchaseUpgrade: (upgradeId: string, cost: number) => boolean;
   updateHighScore: (score: number) => void;
   setLanguage: (lang: 'en' | 'ja') => void;
   toggleSound: () => void;
@@ -88,6 +89,15 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     });
     get().saveData();
     return true;
+  },
+
+  purchaseUpgrade: (upgradeId, cost) => {
+    const success = get().spendCoins(cost);
+    if (success) {
+      get().upgradeLevel(upgradeId);
+      return true;
+    }
+    return false;
   },
 
   updateHighScore: (score) => {

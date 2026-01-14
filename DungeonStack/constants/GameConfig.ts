@@ -11,11 +11,11 @@ export const GameConfig = {
     initialCoins: 0,
   },
 
-  // ブロック落下速度（ミリ秒/マス）
-  blockFall: {
-    normal: 500,         // 通常落下
-    fast: 50,            // 高速落下
-    afterMatch: 200,     // マッチ後の再配置
+  // ブロック設定
+  blocks: {
+    fallSpeed: 500,      // 通常落下速度（ミリ秒/マス）
+    fastFallSpeed: 50,   // 高速落下速度
+    afterMatchDelay: 200, // マッチ後の再配置待ち時間
   },
 
   // マッチング条件
@@ -55,13 +55,16 @@ export const GameConfig = {
       attack: 15,
       spawnWeight: 10,
     },
+    dragon: {
+      hp: 10,
+      attack: 25,
+      spawnWeight: 5,
+    },
   },
 
   // ボス（MVP版は1体のみ）
   boss: {
     dragon: {
-      hp: 10,
-      attack: 25,
       appearStages: [5],  // MVPはステージ5のみ
       coinReward: 500,
     },

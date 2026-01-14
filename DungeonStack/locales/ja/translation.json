@@ -10,7 +10,8 @@
     "cancel": "キャンセル",
     "buy": "購入",
     "upgrade": "強化",
-    "back": "戻る"
+    "back": "戻る",
+    "home": "ホーム"
   },
   "game": {
     "title": "Dungeon Stack",
@@ -21,8 +22,9 @@
     "coins": "金貨",
     "gameOver": "ゲームオーバー",
     "victory": "勝利！",
-    "finalScore": "最終スコア: {{score}}",
-    "coinsEarned": "獲得金貨: {{coins}}"
+    "finalScore": "最終スコア",
+    "coinsEarned": "獲得金貨",
+    "newHighScore": "ハイスコア更新！"
   },
   "difficulty": {
     "casual": "カジュアル",
@@ -42,6 +44,7 @@
     "startingCoinsDesc": "金貨50枚でスタート",
     "level": "レベル {{level}}/{{max}}",
     "cost": "コスト: {{amount}}金貨",
-    "maxLevel": "最大レベル"
+    "maxLevel": "最大レベル",
+    "purchase": "購入"
   }
 }

@@ -5,15 +5,17 @@ import * as Localization from 'expo-localization';
 import en from '../locales/en/translation.json';
 import ja from '../locales/ja/translation.json';
 
+const locales = Localization.getLocales();
+const deviceLanguage = locales[0]?.languageCode || 'en';
+
 i18n
   .use(initReactI18next)
   .init({
-    compatibilityJSON: 'v3',
     resources: {
       en: { translation: en },
       ja: { translation: ja },
     },
-    lng: Localization.locale.startsWith('ja') ? 'ja' : 'en',
+    lng: deviceLanguage.startsWith('ja') ? 'ja' : 'en',
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,

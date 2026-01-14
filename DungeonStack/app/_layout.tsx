@@ -7,6 +7,8 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import '../utils/i18n'; // i18nの初期化
+import { usePlayerStore } from '../store/playerStore';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -26,6 +28,11 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
     ...FontAwesome.font,
   });
+
+  // プレイヤーデータのロード
+  useEffect(() => {
+    usePlayerStore.getState().loadData();
+  }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
