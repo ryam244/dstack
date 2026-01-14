@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { StatusBar } from '../../components/game/StatusBar';
 import { GameBoard } from '../../components/game/GameBoard';
 import { HeroLine } from '../../components/game/HeroLine';
+import { GameOverModal } from '../../components/game/GameOverModal';
 import { useGameStore } from '../../store/gameStore';
 import { useBlockFall } from '../../hooks/useBlockFall';
 import { Colors } from '../../constants/Colors';
@@ -75,6 +76,9 @@ export default function GameScreen() {
           </Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* ゲームオーバー/勝利モーダル */}
+      <GameOverModal />
     </SafeAreaView>
   );
 }

@@ -10,7 +10,8 @@
     "cancel": "Cancel",
     "buy": "Buy",
     "upgrade": "Upgrade",
-    "back": "Back"
+    "back": "Back",
+    "home": "Home"
   },
   "game": {
     "title": "Dungeon Stack",
@@ -21,8 +22,9 @@
     "coins": "Coins",
     "gameOver": "Game Over",
     "victory": "Victory!",
-    "finalScore": "Final Score: {{score}}",
-    "coinsEarned": "Coins Earned: {{coins}}"
+    "finalScore": "Final Score",
+    "coinsEarned": "Coins Earned",
+    "newHighScore": "NEW HIGH SCORE!"
   },
   "difficulty": {
     "casual": "Casual",
@@ -42,6 +44,7 @@
     "startingCoinsDesc": "Start with +50 coins",
     "level": "Level {{level}}/{{max}}",
     "cost": "Cost: {{amount}} coins",
-    "maxLevel": "Max Level"
+    "maxLevel": "MAX LEVEL",
+    "purchase": "Purchase"
   }
 }
